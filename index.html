@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stopwatch</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Verdana, Geneva, Tahoma, sans-serif;
+        }
+
+        body {
+            background-color: rgba(0, 0, 0, 0.7);
+            color: #000000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            flex-direction: column;
+        }
+
+        #stopwatch {
+            background-color: #8B4513; /* Brown background */
+            padding: 20px 24px;
+            border-radius: 10px;
+        }
+
+        .timerDisplay {
+            font-size: 50px;
+            font-weight: 600;
+            color: #000000; /* Black numbers */
+        }
+
+        .buttons {
+            margin-top: 20px;
+        }
+
+        .btn {
+            font-size: 20px;
+            background: none;
+            border: none;
+            color: #000000; /* Black text for buttons */
+            background-color: #C0C0C0; /* Silver background for buttons */
+            padding: 12px 24px;
+            margin-inline: 12px;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div id="stopwatch">
+        <div class="timerDisplay">00 : 00 : 00</div>
+    </div>
+
+    <div class="buttons">
+        <h1>
+            <button onclick="startStopwatch()" class="btn">Start</button>
+            <button onclick="stopStopwatch()" class="btn">Stop</button>
+            <button onclick="resetStopwatch()" class="btn">Reset</button>
+        </h1>
+    </div>
+
+    <script>
+      var startTime; // to keep track of the start time
+      var stopwatchInterval; // to keep track of the interval
+      var elapsedPausedTime = 0; // to keep track of the elapsed time while stopped
+
+      function startStopwatch() {
+        if (!stopwatchInterval) {
+          startTime = new Date().getTime() - elapsedPausedTime; // get the starting time by subtracting the elapsed paused time from the current time
+          stopwatchInterval = setInterval(updateStopwatch, 1000); // update every second
+        }
+      }
+
+      function stopStopwatch() {
+        clearInterval(stopwatchInterval); // stop the interval
+        elapsedPausedTime = new Date().getTime() - startTime; // calculate elapsed paused time
+        stopwatchInterval = null; // reset the interval variable
+      }
+
+      function resetStopwatch() {
+        stopStopwatch(); // stop the interval
+        elapsedPausedTime = 0; // reset the elapsed paused time variable
+        document.getElementById("stopwatch").innerHTML = "00:00:00"; // reset the display
+      }
+
+      function updateStopwatch() {
+        var currentTime = new Date().getTime(); // get current time in milliseconds
+        var elapsedTime = currentTime - startTime; // calculate elapsed time in milliseconds
+        var seconds = Math.floor(elapsedTime / 1000) % 60; // calculate seconds
+        var minutes = Math.floor(elapsedTime / 1000 / 60) % 60; // calculate minutes
+        var hours = Math.floor(elapsedTime / 1000 / 60 / 60); // calculate hours
+        var displayTime = pad(hours) + ":" + pad(minutes) + ":" + pad(seconds); // format display time
+        document.getElementById("stopwatch").innerHTML = displayTime; // update the display
+      }
+
+      function pad(number) {
+        // add a leading zero if the number is less than 10
+        return (number < 10 ? "0" : "") + number;
+      }
+    </script>
+</body>
+</html>
